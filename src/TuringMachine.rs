@@ -13,4 +13,9 @@ pub struct TM {
 }
 
 
+impl TM {
+    fn new() -> Self {
+
+    }
+}
 
