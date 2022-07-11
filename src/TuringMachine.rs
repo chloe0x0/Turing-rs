@@ -3,6 +3,7 @@ mod direction;
 mod transition;
 mod tape;
 use std::collections::HashMap;
+use std::io::{self, Write};
 
 use transition::Trans;
 use tape::Tape;
@@ -10,6 +11,7 @@ use state::State;
 use direction::Direction;
 
 // Reports the Status of a Turing Machine time step
+#[derive(Debug)]
 enum Status<T> {
     Err(T),  // Error message 
     Warn(T), // warning 
@@ -20,13 +22,21 @@ enum Status<T> {
 pub struct TM {
     state: State,
     pos: usize,      
-    tape: Tape,
+    pub tape: Tape,
     trans_fun: HashMap<(State, String), Trans> // Map (state::State, tape[pos]) => transition tuple
 }
 
 impl TM {
     fn new(s0: State, ln: usize, em: String, tr: HashMap<(State, String), Trans>) -> Self {
         TM { state: s0, tape: Tape::new(ln, em), pos: ln / 2, trans_fun: tr }
+    }
+
+    fn move_head(&mut self, d: Direction) {
+        match d {
+            Direction::LEFT => self.pos -= 1,
+            Direction::NONE => return,
+            Direction::RIGHT => self.pos += 1
+        }
     }
 
     fn iter(&mut self) -> Status<String> {
@@ -56,14 +66,46 @@ impl TM {
         self.tape.set(self.pos, write_s);
 
         // Update the head position
-        self.pos += t.dir as usize;
-
+        self.move_head(t.dir);
         // valid iteration
         return Status::Valid;
     }
 }
 
 fn main() {
-    println!("Hello World! ");
+    // 2 State Busy Beaver
+    // a0 -> b1r    a1 -> b1l
+    // b0 -> a1l    b1 -> h1r
+    let A: State = State::new("A".to_string(), false);
+    let B: State = State::new("B".to_string(), false);
+    let HALT: State = State::new("HALT".to_string(), true);
+
+    let trans: HashMap<(State, String), Trans> = HashMap::from([
+        ( (A.clone(), "1".to_string()), Trans::new(B.clone(), "1".to_string(), Direction::LEFT)),
+        ( (A.clone(), "0".to_string()), Trans::new(B.clone(), "1".to_string(), Direction::RIGHT)),
+        ( (B.clone(), "1".to_string()), Trans::new(HALT.clone(), "1".to_string(), Direction::RIGHT)),
+        ( (B.clone(), "0".to_string()), Trans::new(A.clone(), "1".to_string(), Direction::LEFT)),
+    ]);
+
+    let tape_length: usize = 25;
+
+    let mut T = TM::new(A.clone(), tape_length, "0".to_string(), trans);
+
+    println!("{:?}", T.iter());
+
+    let zero = String::from("0");
+    let one = String::from("1");
+
+    while !T.state.halt {
+        // Print vector
+        for n in T.tape.tape.iter() {
+            if n == "0" { print!(" "); }
+            else { print!("1"); }
+        }
+        io::stdout().flush().unwrap();
+        println!("");
+        T.iter();
+    }
+
 }
 
