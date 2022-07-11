@@ -1,17 +1,12 @@
 
-#[derive(Debug)]
+#[derive(Eq, Hash, PartialEq, Debug, Clone)]
 pub struct State {
-    sym: String,
-    halt: bool
+    pub sym: String,
+    pub halt: bool
 }
 
 impl State {
-    fn new(s: String, is_halt: bool) -> Self {
+    pub fn new(s: String, is_halt: bool) -> Self {
         State { sym: s, halt: is_halt }
     }
-}
-
-fn main() {
-    let s: State = State::new(String::from("HALT"), true); 
-    println!("{:?}", s);
 }
