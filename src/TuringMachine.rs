@@ -91,11 +91,6 @@ fn main() {
 
     let mut T = TM::new(A.clone(), tape_length, "0".to_string(), trans);
 
-    println!("{:?}", T.iter());
-
-    let zero = String::from("0");
-    let one = String::from("1");
-
     while !T.state.halt {
         // Print vector
         for n in T.tape.tape.iter() {
