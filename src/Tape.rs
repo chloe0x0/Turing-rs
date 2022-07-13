@@ -5,8 +5,8 @@ pub struct Tape {
 }
 
 impl Tape {
-    pub fn new(init_capacity: usize, empty_str: String) -> Self {
-        Tape { tape: vec![empty_str; init_capacity] }
+    pub fn new(init_capacity: usize, empty_str: &str) -> Self {
+        Tape { tape: vec![empty_str.to_string(); init_capacity] }
     }
 
     pub fn at(&self, index: usize) -> String {

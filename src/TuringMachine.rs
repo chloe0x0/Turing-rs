@@ -18,6 +18,13 @@ enum Status<T> {
     Valid
 }
 
+impl<T> Status<T> {
+    #[inline]
+    fn is_err(&self) -> bool {
+        matches!(*self, Status::Err(_))
+    }
+}
+
 #[derive(Debug)]
 pub struct TM {
     state: State,
@@ -27,7 +34,7 @@ pub struct TM {
 }
 
 impl TM {
-    fn new(s0: State, ln: usize, em: String, tr: HashMap<(State, String), Trans>) -> Self {
+    fn new(s0: State, ln: usize, em: &str, tr: HashMap<(State, String), Trans>) -> Self {
         TM { state: s0, tape: Tape::new(ln, em), pos: ln / 2, trans_fun: tr }
     }
 
@@ -70,36 +77,67 @@ impl TM {
         // valid iteration
         return Status::Valid;
     }
+
+    fn run(&mut self) -> Status<String> {
+        while !self.state.halt {
+            let stat: Status<String> = self.iter();
+
+            if stat.is_err() {
+                return stat;
+            }
+        }
+
+        return Status::Valid;
+    }
+
+    // Validates the transition function
+    fn validate_trans(&self) -> bool {
+        for (tp, tr) in &self.trans_fun {
+            if tr.next_state.halt {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 fn main() {
     // 2 State Busy Beaver
     // a0 -> b1r    a1 -> b1l
     // b0 -> a1l    b1 -> h1r
-    let A: State = State::new("A".to_string(), false);
-    let B: State = State::new("B".to_string(), false);
-    let HALT: State = State::new("HALT".to_string(), true);
+    let A: State = State::new("A", false);
+    let B: State = State::new("B", false);
+    let HALT: State = State::new("HALT", true);
 
     let trans: HashMap<(State, String), Trans> = HashMap::from([
-        ( (A.clone(), "1".to_string()), Trans::new(B.clone(), "1".to_string(), Direction::LEFT)),
-        ( (A.clone(), "0".to_string()), Trans::new(B.clone(), "1".to_string(), Direction::RIGHT)),
-        ( (B.clone(), "1".to_string()), Trans::new(HALT.clone(), "1".to_string(), Direction::RIGHT)),
-        ( (B.clone(), "0".to_string()), Trans::new(A.clone(), "1".to_string(), Direction::LEFT)),
+        ( (A.clone(), "1".to_string()), Trans::new(B.clone(), "1", Direction::LEFT)),
+        ( (A.clone(), "0".to_string()), Trans::new(B.clone(), "1", Direction::RIGHT)),
+        ( (B.clone(), "0".to_string()), Trans::new(A.clone(), "1", Direction::LEFT)),
+        ( (B.clone(), "1".to_string()), Trans::new(HALT.clone(), "1", Direction::RIGHT)),
     ]);
 
     let tape_length: usize = 25;
 
-    let mut T = TM::new(A.clone(), tape_length, "0".to_string(), trans);
 
-    while !T.state.halt {
-        // Print vector
+   let mut T = TM::new(A.clone(), tape_length, "0", trans);
+
+    while !T.state.halt{
+        
+        print!("{} \t", T.state.sym);
+
         for n in T.tape.tape.iter() {
             if n == "0" { print!(" "); }
             else { print!("1"); }
         }
         io::stdout().flush().unwrap();
         println!("");
-        T.iter();
+
+        let stat: Status<String> = T.iter();
+        if stat.is_err() {
+            println!("{:?}", stat);
+            break;
+        }
     }
 
 }

@@ -15,7 +15,7 @@ pub struct Trans {
 }
 
 impl Trans {
-    pub fn new(s: State, sym: String, d: Direction) -> Self {
-        Trans {next_state: s, write_sym: sym, dir: d}
+    pub fn new(s: State, sym: &str, d: Direction) -> Self {
+        Trans {next_state: s, write_sym: sym.to_string(), dir: d}
     }
 }    

@@ -6,7 +6,7 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(s: String, is_halt: bool) -> Self {
-        State { sym: s, halt: is_halt }
+    pub fn new(s: &str, is_halt: bool) -> Self {
+        State { sym: s.to_string(), halt: is_halt }
     }
 }
