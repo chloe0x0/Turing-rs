@@ -120,7 +120,11 @@ fn main() {
     let tape_length: usize = 25;
 
 
-   let mut T = TM::new(A.clone(), tape_length, "0", trans);
+    let mut T = TM::new(A.clone(), tape_length, "0", trans);
+
+    if !T.validate_trans() {
+        panic!("Transition Function has no halt state !!");
+    }
 
     while !T.state.halt{
         
