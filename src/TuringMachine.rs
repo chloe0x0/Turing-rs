@@ -95,7 +95,7 @@ impl TM {
     }
 
     // Validates transition function
-    fn validate_trans(&self) -> Result<String, String> {
+    fn validate_trans(&self) -> Result<(), String> {
         let mut halt_states: usize = 0;
 
         for (tp, tr) in &self.trans_fun {
@@ -118,7 +118,7 @@ impl TM {
         
         match halt_states == 0 {
             true => Err("Transition function has no halting state!".to_string()),
-            false => Ok("Valid !!".to_string())
+            false => Ok(())
         }
     }
 }
