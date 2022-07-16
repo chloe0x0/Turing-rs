@@ -5,6 +5,7 @@ mod tape;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::io::{self, Write};
+use std::env;
 
 use transition::Trans;
 use tape::Tape;
@@ -109,12 +110,13 @@ fn main() {
 
     let trans: HashMap<(String, String), Trans> = HashMap::new();
 
-    let tape_length: usize = 100;
+    let tape_length: usize = 5;
     
-    let mut T = TM::new("A", tape_length, "0", trans, halt);
+    let mut T = TM::new("b", tape_length, ".", trans, halt);
 
     // Current State Head Symbol Next State Write Symbol Direction
     // 4 state busy beaver
+    /*
     T.parse("A 0 B 1 R");
     T.parse("A 1 B 1 L");
     T.parse("B 0 A 1 L");
@@ -123,15 +125,22 @@ fn main() {
     T.parse("C 0 H 1 R");
     T.parse("D 1 A 0 R");
     T.parse("D 0 D 1 R");
+    */
+    // Turing's first example
+    T.parse("b . c 0 R");
+    T.parse("c . e . R");
+    T.parse("e . f 1 R");
+    T.parse("f . b . R");
 
-    loop {
+    for i in 0..100 {
         
         print!("{} \t", T.state);
 
         for n in T.tape.tape.iter() {
-            if n == "0" { print!(" "); }
-            else { print!("1"); }
+            if n == &*T.tape.empty_str { print!(" "); }
+            else { print!("{}", n); }
         }
+        print!("|||||");
         io::stdout().flush().unwrap();
         println!("");
 
