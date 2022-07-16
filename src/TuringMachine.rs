@@ -34,7 +34,6 @@ pub struct TM {
     alpha: HashSet<String>,
     state_space: HashSet<State>,
     trans_fun: HashMap<(State, String), Trans> // Map (state::State, tape[pos]) => transition tuple
-
 }
 
 impl TM {
@@ -129,16 +128,22 @@ fn main() {
     // b0 -> a1l    b1 -> h1r
     let A: State = State::new("A", false);
     let B: State = State::new("B", false);
-    let HALT: State = State::new("HALT", true);
+    let C: State = State::new("C", false);
+    let D: State = State::new("D", false);
+    let H: State = State::new("H", true);
 
     let alpha = HashSet::from(["1".to_string(), "0".to_string()]);
-    let state_space = HashSet::from([A.clone(), B.clone(), HALT.clone()]);
+    let state_space = HashSet::from([A.clone(), B.clone(), C.clone(), D.clone(), H.clone()]);
 
     let trans: HashMap<(State, String), Trans> = HashMap::from([
         ( (A.clone(), "1".to_string()), Trans::new(B.clone(), "1", Direction::LEFT)),
         ( (A.clone(), "0".to_string()), Trans::new(B.clone(), "1", Direction::RIGHT)),
         ( (B.clone(), "0".to_string()), Trans::new(A.clone(), "1", Direction::LEFT)),
-        ( (B.clone(), "1".to_string()), Trans::new(HALT.clone(), "1", Direction::LEFT)),
+        ( (B.clone(), "1".to_string()), Trans::new(C.clone(), "0", Direction::LEFT)),
+        ( (C.clone(), "1".to_string()), Trans::new(D.clone(), "1", Direction::LEFT)),
+        ( (C.clone(), "0".to_string()), Trans::new(H.clone(), "1", Direction::RIGHT)),
+        ( (D.clone(), "1".to_string()), Trans::new(A.clone(), "0", Direction::RIGHT)),
+        ( (D.clone(), "0".to_string()), Trans::new(D.clone(), "1", Direction::RIGHT)),
     ]);
 
     let tape_length: usize = 25;
@@ -149,7 +154,7 @@ fn main() {
         panic!("{:?}", T.validate_trans());
     }
 
-    while !T.state.halt{
+    while true{
         
         print!("{} \t", T.state.sym);
 
@@ -165,7 +170,10 @@ fn main() {
             println!("{:?}", stat);
             break;
         }
-    }
 
+        if T.state.halt {
+            break;
+        }
+    }
 }
 
