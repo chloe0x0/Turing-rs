@@ -112,11 +112,12 @@ fn main() {
 
     let tape_length: usize = 50;
     
-    let mut T = TM::new("A", tape_length, "0", trans, halt);
+    let mut T = TM::new("q0", tape_length, ".", trans, halt);
+    T.tape.set(T.pos, "0".to_string());
 
     // Current State Head Symbol Next State Write Symbol Direction
     // 4 state busy beaver
- 
+    /*
     T.parse("A 0 B 1 R");
     T.parse("A 1 B 1 L");
     T.parse("B 0 A 1 L");
@@ -125,7 +126,7 @@ fn main() {
     T.parse("C 0 H 1 R");
     T.parse("D 1 A 0 R");
     T.parse("D 0 D 1 R");
-   
+    */
     // Turing's first example
     /*
     T.parse("b . c 0 R");
@@ -134,7 +135,11 @@ fn main() {
     T.parse("f . b . R");
     */
 
-    for i in 0..100 {
+    // Zeno Machine
+    T.parse("q0 0 q0 1 N");
+    T.parse("q0 1 q0 0 N");
+
+    loop {
         
         print!("{} \t", T.state);
 
@@ -155,5 +160,14 @@ fn main() {
             break;
         }
     }
+
+    print!("{} \t", T.state);
+
+    for n in T.tape.tape.iter() {
+        if n == &*T.tape.empty_str { print!(" "); }
+        else { print!("{}", n); }
+    }
+    io::stdout().flush().unwrap();
+    println!("");
 }
 

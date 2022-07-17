@@ -11,7 +11,7 @@ impl Direction {
         match &string.to_lowercase() as &str {
             "l" => Direction::LEFT,
             "r" => Direction::RIGHT,
-            " " => Direction::NONE,
+            "n" => Direction::NONE,
             _ => todo!(),
         }
     }

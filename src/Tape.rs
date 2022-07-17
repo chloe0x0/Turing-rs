@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::convert::TryInto;
 
-const BUFFER_LEN: usize = 1;
+const BUFFER_LEN: usize = 25;
 
 #[derive(Debug)]
 pub struct Tape {
@@ -14,13 +14,13 @@ impl Tape {
         Tape { tape: VecDeque::from(vec![empty_str.to_string(); init_capacity]), empty_str: empty_str.to_string() }
     }
 
-    pub fn extend_back(&mut self) { 
+    fn extend_back(&mut self) { 
         for n in 0..BUFFER_LEN {
             self.tape.push_back(self.empty_str.clone());
         }
     }
 
-    pub fn extend_front(&mut self) {
+    fn extend_front(&mut self) {
         for n in 0..BUFFER_LEN {
             self.tape.push_front(self.empty_str.clone());
         }
