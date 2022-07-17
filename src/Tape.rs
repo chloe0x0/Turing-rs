@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::convert::TryInto;
 
 const BUFFER_LEN: usize = 1;
 
@@ -25,29 +26,31 @@ impl Tape {
         }
     }
 
-    pub fn at(&mut self, index: usize) -> String {
+    pub fn at(&mut self, index: i64) -> String {
         if index < 0 { 
             self.extend_front();
-            return self.tape[index + BUFFER_LEN].clone();
+            return self.tape[0].clone();
         }
-        else if index > self.tape.len()-1 {
+        else if index > (self.tape.len()-1).try_into().unwrap() {
             self.extend_back();
-            return self.tape[index+1 - BUFFER_LEN].clone();
+            let len = self.tape.len();
+            return self.tape[len - 1].clone();
         }
-        return self.tape[index].clone(); 
+        return self.tape[index as usize].clone(); 
     }
 
-    pub fn set(&mut self, index: usize, sym: String) {
+    pub fn set(&mut self, index: i64, sym: String) {
         if index < 0 {
             self.extend_front();
-            self.tape[index + BUFFER_LEN] = sym;
+            self.tape[0] = sym;
         }
-        else if index > self.tape.len()-1 {
+        else if index > (self.tape.len()-1).try_into().unwrap() {
             self.extend_back();
-            self.tape[index+1 - BUFFER_LEN] = sym;
+            let len = self.tape.len();
+            self.tape[len - 1] = sym;
         }
         else {
-            self.tape[index] = sym;
+            self.tape[index as usize] = sym;
         }
     }
 }

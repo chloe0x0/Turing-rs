@@ -30,7 +30,7 @@ impl<T> Status<T> {
 #[derive(Debug)]
 pub struct TM {
     state: String,
-    pos: usize,      
+    pos: i64,      
     pub tape: Tape,
     halt_set: HashSet<String>,
     trans_fun: HashMap<(String, String), Trans> // Map (state::State, tape[pos]) => transition tuple
@@ -38,7 +38,7 @@ pub struct TM {
 
 impl TM {
     fn new(s0: &str, ln: usize, em: &str, tr: HashMap<(String, String), Trans>, halt: HashSet<String>) -> Self {
-        TM { state: s0.to_string(), tape: Tape::new(ln, em), pos: ln / 2, trans_fun: tr,  halt_set: halt }
+        TM { state: s0.to_string(), tape: Tape::new(ln, em), pos: ln as i64 / 2, trans_fun: tr,  halt_set: halt }
     }
 
     fn move_head(&mut self, d: Direction) {
