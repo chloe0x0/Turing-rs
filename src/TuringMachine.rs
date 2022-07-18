@@ -84,6 +84,7 @@ impl TM {
     fn parse(&mut self, trans: &str) {
         // Format is: State Read State Write Dir
         let tokens: Vec<&str> = trans.split(" ").collect();
+        assert_eq!(tokens.len(), 4);
 
         let dir: Direction = Direction::from_str(tokens[4]);
         self.trans_fun.insert((tokens[0].to_string(), tokens[1].to_string()), Trans::new(tokens[2], tokens[3], dir));
