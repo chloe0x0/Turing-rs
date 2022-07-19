@@ -84,7 +84,7 @@ impl TM {
     fn parse(&mut self, trans: &str) {
         // Format is: State Read State Write Dir
         let tokens: Vec<&str> = trans.split(" ").collect();
-        assert_eq!(tokens.len(), 4);
+        assert_eq!(tokens.len(), 5);
 
         let dir: Direction = Direction::from_str(tokens[4]);
         self.trans_fun.insert((tokens[0].to_string(), tokens[1].to_string()), Trans::new(tokens[2], tokens[3], dir));
@@ -114,10 +114,10 @@ fn main() {
     let tape_length: usize = 50;
     
     let mut T = TM::new("q0", tape_length, ".", trans, halt);
-    T.tape.set(T.pos, "0".to_string());
 
     // Current State Head Symbol Next State Write Symbol Direction
     // 4 state busy beaver
+    
     /*
     T.parse("A 0 B 1 R");
     T.parse("A 1 B 1 L");
@@ -128,7 +128,9 @@ fn main() {
     T.parse("D 1 A 0 R");
     T.parse("D 0 D 1 R");
     */
+
     // Turing's first example
+    
     /*
     T.parse("b . c 0 R");
     T.parse("c . e . R");
@@ -137,11 +139,16 @@ fn main() {
     */
 
     // Zeno Machine
+    /*
     T.parse("q0 0 q0 1 N");
     T.parse("q0 1 q0 0 N");
+    */
 
+    // Thue-Morse Sequence Generator
+    // L system of the form: {0 -> 01; 1 -> 10}
+    // 0 -> 01 -> 0110 -> 01101001 -> ... 
+    
     loop {
-        
         print!("{} \t", T.state);
 
         for n in T.tape.tape.iter() {

@@ -12,7 +12,7 @@ impl Direction {
             "l" => Direction::LEFT,
             "r" => Direction::RIGHT,
             "n" => Direction::NONE,
-            _ => todo!(),
+            _ => panic!(format!("Unknown direction: {string}")),
         }
     }
 }

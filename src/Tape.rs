@@ -15,13 +15,13 @@ impl Tape {
     }
 
     fn extend_back(&mut self) { 
-        for n in 0..BUFFER_LEN {
+        for n_ in 0..BUFFER_LEN {
             self.tape.push_back(self.empty_str.clone());
         }
     }
 
     fn extend_front(&mut self) {
-        for n in 0..BUFFER_LEN {
+        for n_ in 0..BUFFER_LEN {
             self.tape.push_front(self.empty_str.clone());
         }
     }
