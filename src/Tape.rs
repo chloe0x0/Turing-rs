@@ -3,7 +3,7 @@ use std::convert::TryInto;
 
 const BUFFER_LEN: usize = 25;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Tape {
     pub tape: VecDeque<String>,
     pub empty_str: String,
