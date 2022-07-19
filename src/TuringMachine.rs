@@ -5,7 +5,6 @@ mod tape;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::io::{self, Write};
-use std::env;
 
 use transition::Trans;
 use tape::Tape;
@@ -28,7 +27,7 @@ impl<T> Status<T> {
 }
 
 #[derive(Debug)]
-pub struct TM {
+pub struct TmDet {
     state: String,
     pos: i64,      
     pub tape: Tape,
@@ -36,9 +35,9 @@ pub struct TM {
     trans_fun: HashMap<(String, String), Trans> // Map (state::State, tape[pos]) => transition tuple
 }
 
-impl TM {
+impl TmDet {
     fn new(s0: &str, ln: usize, em: &str, tr: HashMap<(String, String), Trans>, halt: HashSet<String>) -> Self {
-        TM { state: s0.to_string(), tape: Tape::new(ln, em), pos: ln as i64 / 2, trans_fun: tr,  halt_set: halt }
+        TmDet { state: s0.to_string(), tape: Tape::new(ln, em), pos: ln as i64 / 2, trans_fun: tr,  halt_set: halt }
     }
 
     fn move_head(&mut self, d: Direction) {
@@ -113,12 +112,12 @@ fn main() {
 
     let tape_length: usize = 50;
     
-    let mut T = TM::new("q0", tape_length, ".", trans, halt);
+    let mut T = TmDet::new("A", tape_length, "0", trans, halt);
 
     // Current State Head Symbol Next State Write Symbol Direction
     // 4 state busy beaver
     
-    /*
+   
     T.parse("A 0 B 1 R");
     T.parse("A 1 B 1 L");
     T.parse("B 0 A 1 L");
@@ -127,7 +126,7 @@ fn main() {
     T.parse("C 0 H 1 R");
     T.parse("D 1 A 0 R");
     T.parse("D 0 D 1 R");
-    */
+    
 
     // Turing's first example
     

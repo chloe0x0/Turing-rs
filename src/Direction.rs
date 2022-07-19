@@ -1,5 +1,5 @@
 
-#[derive(Copy, Debug, Clone)]
+#[derive(Clone, Debug, Copy)]
 pub enum Direction {
     LEFT,
     NONE,
@@ -12,7 +12,7 @@ impl Direction {
             "l" => Direction::LEFT,
             "r" => Direction::RIGHT,
             "n" => Direction::NONE,
-            _ => panic!(format!("Unknown direction: {string}")),
+            _ => panic!("Unknown direction: {}", string),
         }
     }
 }
