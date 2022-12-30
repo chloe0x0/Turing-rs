@@ -31,7 +31,7 @@ impl Tape {
         }
     }
 
-    /// Get the symbol at a cell
+    /// Get the symbol at a cell (with bounds checking)
     pub fn at(&mut self, index: i64) -> String {
         if index < 0 {
             self.extend_front();
@@ -44,7 +44,7 @@ impl Tape {
         return self.tape[index as usize].clone();
     }
 
-    /// Write a symbol to a cell
+    /// Write a symbol to a cell (with bounds checking)
     pub fn set(&mut self, index: i64, sym: String) {
         if index < 0 {
             self.extend_front();
